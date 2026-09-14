@@ -171,10 +171,18 @@ APP_URL=https://tu-dominio.com
 # Optimizar
 php artisan optimize
 
+# Enlace público de storage (public/storage -> storage/app/public).
+# El instalador lo ejecuta automáticamente, pero tras un deploy que
+# borre public/storage hay que recrearlo:
+php artisan storage:link
+
 # Permisos
 chmod -R ug+w storage bootstrap/cache
 ```
 
+- Las imágenes subidas por el panel (logo, favicon, etc.) se guardan
+  automáticamente en `storage/app/public/configuration/` y se sirven vía
+  `/storage/configuration/...` — nunca copiarlas a mano a otra ruta.
 - El schema **debe existir** (o el usuario con permiso `CREATE`) **antes** de
   correr el instalador, porque las migraciones crean todas las tablas dentro.
 - Los jobs (email, data transfer) usan `QUEUE_CONNECTION=sync` por defecto;
