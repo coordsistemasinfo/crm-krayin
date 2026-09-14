@@ -48,8 +48,19 @@ GRANT ALL ON SCHEMA crmkrayin TO siu_devel;
 ```bash
 git clone -b unicomfa <URL-DE-ESTE-REPO> crm-krayin
 cd crm-krayin
+
+# 1) Primero el .env (los hooks post-autoload de composer arrancan la app
+#    con `artisan package:discover`; con el .env presente el orden nunca falla)
+cp .env.example .env
+
+# 2) Luego las dependencias
 composer install --no-interaction
 ```
+
+> **El orden importa**: crear el `.env` **antes** de `composer install`. Si
+> `composer install` corre sin `.env` en un entorno estricto puede fallar en el
+> paso `package:discover` del post-autoload-dump; si eso ocurre, crea el `.env`
+> (paso siguiente) y vuelve a correr `composer install`.
 
 `composer install` es **obligatorio** (instala Laravel y todos los paquetes
 Webkul). Los paquetes `Webkul/*` no vienen por composer externo — viven en
@@ -63,11 +74,7 @@ planeas modificar CSS/JS del admin, en cuyo caso además compilarías con
 
 ## 4. Configurar el entorno
 
-```bash
-cp .env.example .env
-```
-
-Editar `.env` — valores clave para PostgreSQL:
+Editar el `.env` creado en el paso 3 — valores clave para PostgreSQL:
 
 ```ini
 APP_ENV=local              # pruebas; en producción: production
