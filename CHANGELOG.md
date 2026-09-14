@@ -20,6 +20,8 @@ This changelog consists of the bug & security fixes and new features being inclu
 
 * [fixed] Fixed expired-quote filtering in the quotes grid building invalid SQL (a table prefix was prepended to `NOW()`), so it now compares `expired_at` against the current date on both drivers.
 
+* [fixed] Fixed `krayin-crm:install` re-running the full installation (wiping the database) on an already-installed application; it now aborts with a `--force` escape hatch, and its prompts default to the values already present in the `.env`.
+
 * [fixed] Fixed `composer run dev` always serving on port 8000, which conflicts with other local apps; the dev script now serves on port 8100.
 
 ## **v2.2.6 (10th of Sept 2026)**

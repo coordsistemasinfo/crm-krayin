@@ -24,7 +24,8 @@ class Installer extends Command
      */
     protected $signature = 'krayin-crm:install
         { --skip-env-check : Skip env check. }
-        { --skip-admin-creation : Skip admin creation. }';
+        { --skip-admin-creation : Skip admin creation. }
+        { --force : Wipe and reinstall even if the application is already installed. }';
 
     /**
      * The console command description.
@@ -125,6 +126,14 @@ class Installer extends Command
      */
     public function handle()
     {
+        if (! $this->option('force')
+            && app(DatabaseManager::class)->isInstallationComplete()
+        ) {
+            $this->error('Krayin is already installed. Running the installer again would wipe the database — re-run with --force to proceed.');
+
+            return self::FAILURE;
+        }
+
         $this->output->writeln(ComposerEvents::cloudHostingBox());
 
         $applicationDetails = ! $this->option('skip-env-check')
@@ -251,8 +260,9 @@ class Installer extends Command
     protected function askForDatabaseDetails()
     {
         $databaseConnection = select(
-            'Please select the database connection',
-            ['mysql', 'mariadb', 'pgsql', 'sqlsrv']
+            label: 'Please select the database connection',
+            options: ['mysql', 'mariadb', 'pgsql', 'sqlsrv'],
+            default: env('DB_CONNECTION', 'mysql')
         );
 
         $databaseDetails = [
