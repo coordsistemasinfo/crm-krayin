@@ -31,9 +31,9 @@ class PersonDataGrid extends DataGrid
                 'persons.name as person_name',
                 'persons.emails',
                 'persons.contact_numbers',
-                'organizations.name as organization',
-                'organizations.id as organization_id',
-                'tags.name as tag_name'
+                DB::raw('MAX(organizations.name) as organization'),
+                DB::raw('MAX(organizations.id) as organization_id'),
+                DB::raw('MAX(tags.name) as tag_name'),
             )
             ->leftJoin('organizations', 'persons.organization_id', '=', 'organizations.id')
             ->leftJoin('person_tags', 'persons.id', '=', 'person_tags.person_id')

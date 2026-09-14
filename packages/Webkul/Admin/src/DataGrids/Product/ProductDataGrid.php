@@ -25,7 +25,7 @@ class ProductDataGrid extends DataGrid
                 'products.sku',
                 'products.name',
                 'products.price',
-                'tags.name as tag_name',
+                DB::raw('MAX(tags.name) as tag_name'),
             )
             ->addSelect(DB::raw('SUM('.$tablePrefix.'product_inventories.in_stock) as total_in_stock'))
             ->addSelect(DB::raw('SUM('.$tablePrefix.'product_inventories.allocated) as total_allocated'))

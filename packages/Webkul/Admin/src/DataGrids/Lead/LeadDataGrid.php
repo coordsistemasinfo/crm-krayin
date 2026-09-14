@@ -61,19 +61,19 @@ class LeadDataGrid extends DataGrid
                 'leads.status',
                 'leads.lead_value',
                 'leads.expected_close_date',
-                'lead_sources.name as lead_source_name',
-                'lead_types.name as lead_type_name',
                 'leads.created_at',
-                'lead_pipeline_stages.name as stage',
-                'lead_tags.tag_id as tag_id',
-                'users.id as user_id',
-                'users.name as sales_person',
-                'persons.id as person_id',
-                'persons.name as person_name',
-                'tags.name as tag_name',
-                'lead_pipelines.rotten_days as pipeline_rotten_days',
-                'lead_pipeline_stages.code as stage_code',
-                DB::raw('CASE WHEN '.SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >='.$tablePrefix.'lead_pipelines.rotten_days THEN 1 ELSE 0 END as rotten_lead'),
+                DB::raw('MAX(lead_sources.name) as lead_source_name'),
+                DB::raw('MAX(lead_types.name) as lead_type_name'),
+                DB::raw('MAX(lead_pipeline_stages.name) as stage'),
+                DB::raw('MAX(lead_pipeline_stages.code) as stage_code'),
+                DB::raw('MAX(lead_tags.tag_id) as tag_id'),
+                DB::raw('MAX(users.id) as user_id'),
+                DB::raw('MAX(users.name) as sales_person'),
+                DB::raw('MAX(persons.id) as person_id'),
+                DB::raw('MAX(persons.name) as person_name'),
+                DB::raw('MAX(tags.name) as tag_name'),
+                DB::raw('MAX(lead_pipelines.rotten_days) as pipeline_rotten_days'),
+                DB::raw('CASE WHEN '.SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >= MAX('.$tablePrefix.'lead_pipelines.rotten_days) THEN 1 ELSE 0 END as rotten_lead'),
             )
             ->leftJoin('users', 'leads.user_id', '=', 'users.id')
             ->leftJoin('persons', 'leads.person_id', '=', 'persons.id')
@@ -111,7 +111,7 @@ class LeadDataGrid extends DataGrid
         }
 
         if (! is_null(request()->input('rotten_lead.in'))) {
-            $queryBuilder->havingRaw('CASE WHEN '.SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >='.$tablePrefix.'lead_pipelines.rotten_days THEN 1 ELSE 0 END = ?', [
+            $queryBuilder->havingRaw('CASE WHEN '.SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >= MAX('.$tablePrefix.'lead_pipelines.rotten_days) THEN 1 ELSE 0 END = ?', [
                 (int) request()->input('rotten_lead.in'),
             ]);
         }

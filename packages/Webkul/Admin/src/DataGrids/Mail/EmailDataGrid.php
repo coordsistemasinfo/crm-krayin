@@ -36,7 +36,7 @@ class EmailDataGrid extends DataGrid
                 'emails.reply',
                 'emails.is_read',
                 'emails.created_at',
-                'tags.name as tags',
+                DB::raw('MAX(tags.name) as tags'),
                 DB::raw('COUNT(DISTINCT '.DB::getTablePrefix().'email_attachments.id) as attachments')
             )
             ->leftJoin('email_attachments', 'emails.id', '=', 'email_attachments.email_id')
