@@ -41,6 +41,20 @@ Defined in `phpunit.xml`:
 | Unit | `tests/Unit` | `php artisan test --testsuite="Unit"` |
 | Feature | `tests/Feature` | `php artisan test --testsuite="Feature"` |
 
+## Database in Tests
+
+The suite runs against the **default `.env` connection** — this install uses
+PostgreSQL (schema `crmkrayin`). Keep in mind:
+
+- There is no `RefreshDatabase` on the base test case, so tests run against the
+  already-migrated database and must not wipe or reseed it (`migrate:fresh`
+  drops the live schema).
+- PostgreSQL is stricter than MySQL: raw SQL inside tests must be portable
+  (use `Webkul\Core\Database\SqlCompat` — see the `crm-package-development`
+  skill) and seeding must not assume `GROUP_CONCAT`-style behavior.
+- Feature tests that hit datagrids exercise real PG queries — if a grid fails
+  here, it fails in the browser too.
+
 ## Pest.php Configuration
 
 `tests/Pest.php` binds the base test case for feature tests:

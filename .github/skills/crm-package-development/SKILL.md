@@ -35,6 +35,7 @@ Activate this skill when the user wants to:
 - Use Laravel package-based structure
 - All database changes must be done using migrations
 - Ensure backward compatibility and safe upgrades
+- All SQL must be driver-portable — see [Database Portability](#database-portability-mysql--postgresql)
 
 ---
 
@@ -155,6 +156,74 @@ php artisan tinker --execute='app()->setLocale("<locale>"); echo trans("admin::a
 ```
 
 A key that resolves to its own name (`admin::app.foo.bar`) is missing.
+
+---
+
+## Database Portability (MySQL + PostgreSQL)
+
+### The context
+
+This install runs on **PostgreSQL** (server `10.10.70.223`, database `siu_test`,
+schema `crmkrayin`) while Krayin was originally built for MySQL/MariaDB.
+`DB_CONNECTION=pgsql` and `DB_SCHEMA` (used as the connection `search_path`)
+are set in `.env`. PostgreSQL is far stricter than MySQL, so every new query
+and migration must work on both drivers.
+
+### The rules
+
+**1. Never hardcode MySQL-only SQL.** Use `Webkul\Core\Database\SqlCompat` for
+any dialect-specific expression — it switches on
+`DB::connection()->getDriverName()` and emits the portable equivalent:
+
+| MySQL expression | `SqlCompat` helper | PostgreSQL output |
+|---|---|---|
+| `DATEDIFF(a, b)` | `SqlCompat::datediff($a, $b)` | `(DATE(a) - DATE(b))` |
+| `DATEDIFF(NOW(), col)` | `SqlCompat::daysFromNow($col)` | `(CURRENT_DATE - DATE(col))` |
+| `col + INTERVAL n DAY` | `SqlCompat::dateAddDays($col, $n)` | `(col::date + (n))` |
+| `IF(c, x, y)` | `SqlCompat::ifExpr($c, $x, $y)` | `(CASE WHEN c THEN x ELSE y END)` |
+| `GROUP_CONCAT(DISTINCT x ORDER BY x SEPARATOR ', ')` | `SqlCompat::groupConcat($x)` | `string_agg(DISTINCT x, ', ' ORDER BY x)` |
+| `MONTH/YEAR/WEEK/DAYOFYEAR(col)` | `SqlCompat::extract($unit, $col)` | `EXTRACT(... FROM col)::int` |
+| `DATE_FORMAT(col, '%Y-%m')` | `SqlCompat::dateFormat($col, '%Y-%m')` | `to_char(col, 'YYYY-MM')` |
+| `JSON_UNQUOTE(JSON_EXTRACT(col, '$."k"'))` | `SqlCompat::jsonGetText($col, 'k')` | `(col->>'k')` |
+| `JSON_UNQUOTE(JSON_EXTRACT(col, '$[0].k'))` | `SqlCompat::jsonArrayFirstText($col, 'k')` | `(col::jsonb->0->>'k')` |
+
+Also available: `SqlCompat::isPostgres()`, `SqlCompat::isMySql()` and
+`SqlCompat::driver()` for driver-conditional SQL when no helper covers the case
+(e.g. `SET FOREIGN_KEY_CHECKS`, `setval(...)` on sequences).
+
+**2. `GROUP BY` must be strict.** PostgreSQL requires every selected column
+from a joined table to be either aggregated (`MAX(...)`) or in the `GROUP BY`.
+Grouping only by the primary table's id is fine for that table's own columns
+(PG infers functional dependency on its PK), but joined-table columns
+(`tags.name`, `lead_sources.name`, ...) must be selected as `DB::raw('MAX(...)')
+` — that keeps exactly one row per record on both drivers. Note PG does not
+resolve output aliases inside `HAVING`: repeat the full expression there.
+
+**3. JSON columns are `json` in migrations but `jsonb` on PostgreSQL.** A
+Core migration converts every `json` column of the schema to `jsonb` (PG has no
+equality operator for `json`, so `DISTINCT`/`GROUP BY` over such rows fails).
+New packages may keep using `$table->json(...)`. When reading JSON inside raw
+SQL, use the `SqlCompat` JSON helpers.
+
+**4. Migrations with explicit-id inserts.** PostgreSQL sequences do not advance
+on explicit inserts (MySQL's `auto_increment` does). When a migration or seeder
+inserts rows with explicit ids on pgsql, re-sync the sequence, or call
+`SqlCompat::syncSequences()` at the end of the global `DatabaseSeeder`.
+
+**5. Migrations must be reversible and portable.** Do not use MySQL-only
+statements (`SET FOREIGN_KEY_CHECKS`, `DROP FOREIGN KEY`, `DROP INDEX`, ...) —
+use the schema builder (`dropForeign`, `dropUnique`, ...). `UPDATE` statements
+that need values from another table use a correlated sub-select, not an
+UPDATE...JOIN (Laravel's PG compile joins updates via a `ctid` trick that
+cannot see the joined table).
+
+### Checking your work
+
+```bash
+php artisan migrate                      # must run clean on pgsql
+php artisan tinker --execute='SqlCompat::driver();'  # pgsql
+php artisan test --compact               # suite runs against the default pgsql connection
+```
 
 ---
 

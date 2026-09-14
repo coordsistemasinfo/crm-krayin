@@ -53,6 +53,13 @@ skill content here — keep details in the skills.
   `KRAYIN_VERSION` outside a release commit. See the `crm-package-development`
   skill for the entry format and tags.
 - **Preserve backward compatibility** so the CRM stays upgrade-safe.
+- **This install runs on PostgreSQL** (schema `crmkrayin`, connection via
+  `DB_CONNECTION=pgsql` + `DB_SCHEMA` used as `search_path`). All SQL must be
+  driver-portable: use `Webkul\Core\Database\SqlCompat` for any dialect-specific
+  raw expression and never hardcode MySQL-only functions (`DATEDIFF`,
+  `GROUP_CONCAT`, `IF()`, `DATE_FORMAT`, `JSON_EXTRACT`, ...). Every datagrid
+  column selected from a joined table must be aggregated (`MAX(...)`) or
+  included in the `GROUP BY`. See the `crm-package-development` skill.
 
 ---
 
@@ -63,6 +70,7 @@ composer install            # install PHP dependencies
 php artisan migrate          # run migrations
 php artisan test --compact   # run the Pest test suite
 ./vendor/bin/pint            # format code (PSR-12 via Laravel Pint)
+composer run dev             # serve the app on http://localhost:8100 (not 8000)
 ```
 
 - Add tests for new behavior; follow the `pest-testing` skill.
