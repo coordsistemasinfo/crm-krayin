@@ -10,6 +10,8 @@ This changelog consists of the bug & security fixes and new features being inclu
 
 * [fixed] Fixed the installer seeding step failing because the controller read a nonexistent `allParameters` request property.
 
+* [fixed] Fixed queries over rows with JSON columns (activities, persons, emails, roles, quotes, etc.) failing on PostgreSQL with "could not identify an equality operator for type json"; all `json` columns are converted to `jsonb` by a PostgreSQL-only migration, which supports DISTINCT and GROUP BY.
+
 * [fixed] Fixed expired-quote filtering in the quotes grid building invalid SQL (a table prefix was prepended to `NOW()`), so it now compares `expired_at` against the current date on both drivers.
 
 * [fixed] Fixed `composer run dev` always serving on port 8000, which conflicts with other local apps; the dev script now serves on port 8100.
