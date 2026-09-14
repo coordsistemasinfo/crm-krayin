@@ -142,6 +142,7 @@ el **schema** (default `public`; usa `crmkrayin`) y propone el puerto `5432`.
 ## 6. Verificación post-instalación
 
 ```bash
+ls -la public/storage    # symlink -> storage/app/public (si no existe: php artisan storage:link)
 php artisan migrate:status | tail -5   # 60+ tablas, sin pendientes
 ```
 
