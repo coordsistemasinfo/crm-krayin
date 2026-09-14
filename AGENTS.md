@@ -32,6 +32,10 @@ See [.github/skills/README.md](.github/skills/README.md) for the standard.
 Read the relevant `SKILL.md` before starting work in its domain. Do not restate
 skill content here — keep details in the skills.
 
+Plugin/integration analysis documents and their specs live in `docs/specs/`
+(`README.md` there tracks each one's status). Write the spec there first, then
+implement the integration as a package under `packages/Webkul/`.
+
 ---
 
 ## Critical Conventions (Never Deviate)
