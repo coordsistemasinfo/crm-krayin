@@ -14,6 +14,10 @@ This changelog consists of the bug & security fixes and new features being inclu
 
 * [fixed] Fixed the leads, persons, products and mail datagrids failing on PostgreSQL with a grouping error because columns selected from joined tables were not aggregated; those columns are now aggregated with `MAX()`, keeping one row per record on both drivers.
 
+* [fixed] Fixed the dashboard reporting helpers (top-selling products, top persons, top organizations, leads by sources/types/states) failing on PostgreSQL with a grouping error; the `SELECT *`-style queries now select aggregated columns.
+
+* [fixed] Fixed the help page feature test asserting untranslated English strings, which failed on non-English installs; it now asserts through the translation keys.
+
 * [fixed] Fixed expired-quote filtering in the quotes grid building invalid SQL (a table prefix was prepended to `NOW()`), so it now compares `expired_at` against the current date on both drivers.
 
 * [fixed] Fixed `composer run dev` always serving on port 8000, which conflicts with other local apps; the dev script now serves on port 8100.

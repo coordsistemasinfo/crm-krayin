@@ -57,7 +57,10 @@ class Person extends AbstractReporting
         $items = $this->personRepository
             ->resetModel()
             ->leftJoin('leads', 'persons.id', '=', 'leads.person_id')
-            ->select('*', 'persons.id as id')
+            ->select(
+                DB::raw('MAX(persons.id) as id'),
+                DB::raw('MAX(persons.name) as name'),
+            )
             ->addSelect(DB::raw('SUM('.$tablePrefix.'leads.lead_value) as revenue'))
             ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate])
             ->having(DB::raw('SUM('.$tablePrefix.'leads.lead_value)'), '>', 0)

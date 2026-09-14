@@ -311,7 +311,7 @@ class Lead extends AbstractReporting
         return $this->leadRepository
             ->resetModel()
             ->select(
-                'lead_sources.name',
+                DB::raw('MAX(lead_sources.name) as name'),
                 DB::raw('SUM(lead_value) as total')
             )
             ->leftJoin('lead_sources', 'leads.lead_source_id', '=', 'lead_sources.id')
@@ -329,7 +329,7 @@ class Lead extends AbstractReporting
         return $this->leadRepository
             ->resetModel()
             ->select(
-                'lead_types.name',
+                DB::raw('MAX(lead_types.name) as name'),
                 DB::raw('SUM(lead_value) as total')
             )
             ->leftJoin('lead_types', 'leads.lead_type_id', '=', 'lead_types.id')
@@ -347,7 +347,7 @@ class Lead extends AbstractReporting
         return $this->leadRepository
             ->resetModel()
             ->select(
-                'lead_pipeline_stages.name',
+                DB::raw('MAX(lead_pipeline_stages.name) as name'),
                 DB::raw('COUNT(lead_value) as total')
             )
             ->leftJoin('lead_pipeline_stages', 'leads.lead_pipeline_stage_id', '=', 'lead_pipeline_stages.id')

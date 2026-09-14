@@ -33,7 +33,11 @@ class Product extends AbstractReporting
             ->with('product')
             ->leftJoin('leads', 'lead_products.lead_id', '=', 'leads.id')
             ->leftJoin('products', 'lead_products.product_id', '=', 'products.id')
-            ->select('*')
+            ->select(
+                'product_id',
+                DB::raw('MAX('.$tablePrefix.'products.name) as name'),
+                DB::raw('MAX('.$tablePrefix.'products.price) as price'),
+            )
             ->addSelect(DB::raw('SUM('.$tablePrefix.'lead_products.amount) as revenue'))
             ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate])
             ->having(DB::raw('SUM('.$tablePrefix.'lead_products.amount)'), '>', 0)
@@ -70,7 +74,11 @@ class Product extends AbstractReporting
             ->with('product')
             ->leftJoin('leads', 'lead_products.lead_id', '=', 'leads.id')
             ->leftJoin('products', 'lead_products.product_id', '=', 'products.id')
-            ->select('*')
+            ->select(
+                'product_id',
+                DB::raw('MAX('.$tablePrefix.'products.name) as name'),
+                DB::raw('MAX('.$tablePrefix.'products.price) as price'),
+            )
             ->addSelect(DB::raw('SUM('.$tablePrefix.'lead_products.quantity) as total_qty_ordered'))
             ->whereBetween('leads.closed_at', [$this->startDate, $this->endDate])
             ->having(DB::raw('SUM('.$tablePrefix.'lead_products.quantity)'), '>', 0)
