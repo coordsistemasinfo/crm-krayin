@@ -5,6 +5,7 @@ namespace Webkul\Admin\Helpers\Reporting;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Webkul\Core\Database\SqlCompat;
 
 abstract class AbstractReporting
 {
@@ -208,7 +209,7 @@ abstract class AbstractReporting
 
             if (! empty($intervals)) {
                 return [
-                    'group_column' => "MONTH($dateColumn)",
+                    'group_column' => SqlCompat::extract('MONTH', $dateColumn),
                     'intervals' => $intervals,
                 ];
             }
@@ -220,7 +221,7 @@ abstract class AbstractReporting
 
             if (! empty($intervals)) {
                 return [
-                    'group_column' => "WEEK($dateColumn)",
+                    'group_column' => SqlCompat::extract('WEEK', $dateColumn),
                     'intervals' => $intervals,
                 ];
             }
@@ -229,7 +230,7 @@ abstract class AbstractReporting
              * If the difference between the start and end date is less than 6 weeks
              */
             return [
-                'group_column' => "DAYOFYEAR($dateColumn)",
+                'group_column' => SqlCompat::extract('DAYOFYEAR', $dateColumn),
                 'intervals' => $this->getDaysInterval($startDate, $endDate),
             ];
         } else {
@@ -243,7 +244,7 @@ abstract class AbstractReporting
                 $formatter = '?-?-?';
             }
 
-            $groupColumn = 'DATE_FORMAT('.$dateColumn.', "'.Str::replaceArray('?', ['%Y', '%m', '%d'], $formatter).'")';
+            $groupColumn = SqlCompat::dateFormat($dateColumn, Str::replaceArray('?', ['%Y', '%m', '%d'], $formatter));
 
             $intervals = [];
 

@@ -5,6 +5,7 @@ namespace Webkul\Admin\DataGrids\Settings;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Webkul\Core\Database\SqlCompat;
 use Webkul\DataGrid\DataGrid;
 use Webkul\User\Repositories\GroupRepository;
 
@@ -32,7 +33,7 @@ class UserDataGrid extends DataGrid
                 'users.image',
                 'users.status',
                 'users.created_at',
-                DB::raw('GROUP_CONCAT(DISTINCT '.$tablePrefix.'groups.name ORDER BY '.$tablePrefix.'groups.name SEPARATOR \', \') as group_name')
+                DB::raw(SqlCompat::groupConcat($tablePrefix.'groups.name', ', ', true, $tablePrefix.'groups.name').' as group_name')
             )
             ->leftJoin('user_groups', 'users.id', '=', 'user_groups.user_id')
             ->leftJoin('groups', 'user_groups.group_id', '=', 'groups.id')

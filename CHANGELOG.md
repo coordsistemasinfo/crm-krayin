@@ -2,6 +2,18 @@
 
 This changelog consists of the bug & security fixes and new features being included in the releases listed below.
 
+## **v2.2.7 (Upcoming)**
+
+* [feature] Added PostgreSQL support. The GUI installer and the `krayin-crm:install` command now accept `pgsql`, including a configurable database schema (`DB_SCHEMA`) used as the connection `search_path`, and sequences are re-synced after seeding so explicit-id inserts never collide.
+
+* [feature] Added a portable SQL expression layer (`Webkul\Core\Database\SqlCompat`) so datagrids, reporting helpers and repositories emit driver-aware `DATEDIFF`, `GROUP_CONCAT`, `IF`, `DATE_FORMAT`, date-part extraction and JSON access expressions on both MySQL/MariaDB and PostgreSQL.
+
+* [fixed] Fixed the installer seeding step failing because the controller read a nonexistent `allParameters` request property.
+
+* [fixed] Fixed expired-quote filtering in the quotes grid building invalid SQL (a table prefix was prepended to `NOW()`), so it now compares `expired_at` against the current date on both drivers.
+
+* [fixed] Fixed `composer run dev` always serving on port 8000, which conflicts with other local apps; the dev script now serves on port 8100.
+
 ## **v2.2.6 (10th of Sept 2026)**
 
 * [feature] Added MariaDB support.

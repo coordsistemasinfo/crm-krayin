@@ -4,6 +4,7 @@ namespace Webkul\Admin\Helpers\Reporting;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Webkul\Core\Database\SqlCompat;
 use Webkul\Lead\Repositories\LeadRepository;
 use Webkul\Lead\Repositories\PipelineRepository;
 use Webkul\Lead\Repositories\StageRepository;
@@ -453,11 +454,11 @@ class Lead extends AbstractReporting
             case 'day':
                 return "DATE($dateColumn)";
             case 'week':
-                return "DATE_FORMAT($dateColumn, '%Y-%u')";
+                return SqlCompat::dateFormat($dateColumn, '%Y-%u');
             case 'month':
-                return "DATE_FORMAT($dateColumn, '%Y-%m')";
+                return SqlCompat::dateFormat($dateColumn, '%Y-%m');
             case 'year':
-                return "YEAR($dateColumn)";
+                return SqlCompat::extract('YEAR', $dateColumn);
             default:
                 return "DATE($dateColumn)";
         }

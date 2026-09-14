@@ -163,6 +163,7 @@ return [
                 'database-password' => 'Senha do Banco de Dados',
                 'database-port' => 'Porta do Banco de Dados',
                 'database-prefix' => 'Prefixo do Banco de Dados',
+                'database-schema' => 'Schema của Cơ sở dữ liệu',
                 'database-username' => 'Usuário do Banco de Dados',
                 'default-currency' => 'Moeda Padrão',
                 'default-locale' => 'Idioma Padrão',

@@ -63,6 +63,10 @@ class EnvironmentManager
             $envDBParams['DB_PASSWORD'] = $request['db_password'];
             $envDBParams['DB_CONNECTION'] = $request['db_connection'];
             $envDBParams['DB_PORT'] = (int) $request['db_port'];
+
+            if ($request['db_connection'] === 'pgsql') {
+                $envDBParams['DB_SCHEMA'] = $request['db_schema'] ?? 'public';
+            }
         }
 
         if (isset($request['app_name'])) {

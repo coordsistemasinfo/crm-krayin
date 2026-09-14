@@ -464,6 +464,10 @@
                                         <option value="mariadb">
                                             @lang('installer::app.installer.index.environment-configuration.mariadb')
                                         </option>
+
+                                        <option value="pgsql">
+                                            @lang('installer::app.installer.index.environment-configuration.pgsql')
+                                        </option>
                                     </x-installer::form.control-group.control>
 
                                     <x-installer::form.control-group.error control-name="db_connection" />
@@ -538,6 +542,23 @@
                                     />
 
                                     <x-installer::form.control-group.error control-name="db_prefix" />
+                                </x-installer::form.control-group>
+
+                                <!-- Database Schema (PostgreSQL search path)-->
+                                <x-installer::form.control-group class="mb-2.5">
+                                    <x-installer::form.control-group.label>
+                                        @lang('installer::app.installer.index.environment-configuration.database-schema')
+                                    </x-installer::form.control-group.label>
+
+                                    <x-installer::form.control-group.control
+                                        type="text"
+                                        name="db_schema"
+                                        ::value="envData.db_schema ?? 'public'"
+                                        :label="trans('installer::app.installer.index.environment-configuration.database-schema')"
+                                        :placeholder="trans('installer::app.installer.index.environment-configuration.database-schema')"
+                                    />
+
+                                    <x-installer::form.control-group.error control-name="db_schema" />
                                 </x-installer::form.control-group>
 
                                 <!-- Database Username-->
@@ -1095,12 +1116,12 @@
                         FormSubmit(params, { setErrors }) {
                             const stepActions = {
                                 envDatabase: () => {
-                                    if (['mysql', 'mariadb'].includes(params.db_connection)) {
+                                    if (['mysql', 'mariadb', 'pgsql'].includes(params.db_connection)) {
                                         this.completeStep('envDatabase', 'readyForInstallation', 'active', 'complete', setErrors);
 
                                         this.envData = { ...this.envData, ...params };
                                     } else {
-                                        setErrors({ 'db_connection': ["Krayin currently supports MySQL and MariaDB only."] });
+                                        setErrors({ 'db_connection': ["Krayin currently supports MySQL, MariaDB and PostgreSQL only."] });
                                     }
                                 },
 

@@ -94,7 +94,7 @@ return [
             'charset' => 'utf8',
             'prefix' => env('DB_PREFIX', ''),
             'prefix_indexes' => true,
-            'schema' => 'public',
+            'search_path' => env('DB_SCHEMA', 'public'),
             'sslmode' => 'prefer',
         ],
 

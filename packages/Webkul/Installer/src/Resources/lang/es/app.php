@@ -163,6 +163,7 @@ return [
                 'database-password' => 'Contraseña de la Base de Datos',
                 'database-port' => 'Puerto de la Base de Datos',
                 'database-prefix' => 'Prefijo de la Base de Datos',
+                'database-schema' => 'Esquema de la Base de Datos',
                 'database-username' => 'Usuario de la Base de Datos',
                 'default-currency' => 'Moneda Predeterminada',
                 'default-locale' => 'Idioma Predeterminado',

@@ -163,6 +163,7 @@ return [
                 'database-password' => '데이터베이스 비밀번호',
                 'database-port' => '데이터베이스 포트',
                 'database-prefix' => '데이터베이스 접두사',
+                'database-schema' => '데이터베이스 스키마',
                 'database-username' => '데이터베이스 사용자명',
                 'default-currency' => '기본 통화',
                 'default-locale' => '기본 로케일',

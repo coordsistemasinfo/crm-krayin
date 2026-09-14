@@ -3,6 +3,7 @@
 namespace Webkul\Installer\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Webkul\Core\Database\SqlCompat;
 use Webkul\Installer\Database\Seeders\Attribute\DatabaseSeeder as AttributeSeeder;
 use Webkul\Installer\Database\Seeders\Core\DatabaseSeeder as CoreSeeder;
 use Webkul\Installer\Database\Seeders\EmailTemplate\DatabaseSeeder as EmailTemplateSeeder;
@@ -26,5 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LeadSeeder::class, false, ['parameters' => $parameters]);
         $this->call(UserSeeder::class, false, ['parameters' => $parameters]);
         $this->call(WorkflowSeeder::class, false, ['parameters' => $parameters]);
+
+        SqlCompat::syncSequences();
     }
 }

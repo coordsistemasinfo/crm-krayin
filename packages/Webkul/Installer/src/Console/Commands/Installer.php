@@ -250,11 +250,13 @@ class Installer extends Command
      */
     protected function askForDatabaseDetails()
     {
+        $databaseConnection = select(
+            'Please select the database connection',
+            ['mysql', 'mariadb', 'pgsql', 'sqlsrv']
+        );
+
         $databaseDetails = [
-            'DB_CONNECTION' => select(
-                'Please select the database connection',
-                ['mysql', 'mariadb', 'pgsql', 'sqlsrv']
-            ),
+            'DB_CONNECTION' => $databaseConnection,
 
             'DB_HOST' => text(
                 label: 'Please enter the database host',
@@ -264,7 +266,7 @@ class Installer extends Command
 
             'DB_PORT' => text(
                 label: 'Please enter the database port',
-                default: env('DB_PORT', '3306'),
+                default: env('DB_PORT', $databaseConnection === 'pgsql' ? '5432' : '3306'),
                 required: true
             ),
 
@@ -296,6 +298,12 @@ class Installer extends Command
                 }
             ),
 
+            'DB_SCHEMA' => $databaseConnection === 'pgsql' ? text(
+                label: 'Please enter the database schema',
+                default: env('DB_SCHEMA', 'public'),
+                hint: 'PostgreSQL search path; the schema will be created if it does not exist'
+            ) : '',
+
             'DB_USERNAME' => text(
                 label: 'Please enter your database username',
                 default: env('DB_USERNAME', ''),
@@ -317,7 +325,7 @@ class Installer extends Command
         }
 
         foreach ($databaseDetails as $key => $value) {
-            if ($value) {
+            if ($value !== '' && $value !== null) {
                 $this->envUpdate($key, $value);
             }
         }
@@ -428,6 +436,12 @@ class Installer extends Command
             "database.connections.{$databaseConnection}.password" => $this->getEnvAtRuntime('DB_PASSWORD'),
             "database.connections.{$databaseConnection}.prefix" => $this->getEnvAtRuntime('DB_PREFIX'),
         ]);
+
+        if ($databaseConnection === 'pgsql') {
+            config([
+                "database.connections.{$databaseConnection}.search_path" => $this->getEnvAtRuntime('DB_SCHEMA') ?: 'public',
+            ]);
+        }
 
         DB::purge($databaseConnection);
 

@@ -163,6 +163,7 @@ return [
                 'database-password' => 'كلمة مرور قاعدة البيانات',
                 'database-port' => 'منفذ قاعدة البيانات',
                 'database-prefix' => 'بادئة قاعدة البيانات',
+                'database-schema' => 'مخطط قاعدة البيانات',
                 'database-username' => 'اسم مستخدم قاعدة البيانات',
                 'default-currency' => 'العملة الافتراضية',
                 'default-locale' => 'اللغة الافتراضية',

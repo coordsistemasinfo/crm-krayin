@@ -163,6 +163,7 @@ return [
                 'database-password' => 'رمز عبور پایگاه داده',
                 'database-port' => 'پورت پایگاه داده',
                 'database-prefix' => 'پیشوند پایگاه داده',
+                'database-schema' => 'طرح‌واره پایگاه داده',
                 'database-username' => 'نام کاربری پایگاه داده',
                 'default-currency' => 'ارز پیش‌فرض',
                 'default-locale' => 'زبان پیش‌فرض',

@@ -22,10 +22,9 @@ return new class extends Migration
         });
 
         DB::table('lead_pipeline_stages')
-            ->join('lead_stages', 'lead_pipeline_stages.lead_stage_id', '=', 'lead_stages.id')
             ->update([
-                'lead_pipeline_stages.code' => DB::raw($tablePrefix.'lead_stages.code'),
-                'lead_pipeline_stages.name' => DB::raw($tablePrefix.'lead_stages.name'),
+                'code' => DB::raw('(SELECT lead_stages.code FROM lead_stages WHERE lead_stages.id = lead_pipeline_stages.lead_stage_id)'),
+                'name' => DB::raw('(SELECT lead_stages.name FROM lead_stages WHERE lead_stages.id = lead_pipeline_stages.lead_stage_id)'),
             ]);
 
         Schema::table('lead_pipeline_stages', function (Blueprint $table) use ($tablePrefix) {

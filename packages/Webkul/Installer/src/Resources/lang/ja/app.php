@@ -163,6 +163,7 @@ return [
                 'database-password' => 'データベースパスワード',
                 'database-port' => 'データベースポート',
                 'database-prefix' => 'データベースプレフィックス',
+                'database-schema' => 'データベーススキーマ',
                 'database-username' => 'データベースユーザー名',
                 'default-currency' => '既定の通貨',
                 'default-locale' => '既定の言語',

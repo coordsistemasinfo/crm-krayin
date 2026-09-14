@@ -163,6 +163,7 @@ return [
                 'database-password' => 'Veritabanı Parolası',
                 'database-port' => 'Veritabanı Bağlantı Noktası',
                 'database-prefix' => 'Veritabanı Öneki',
+                'database-schema' => 'Veritabanı Şeması',
                 'database-username' => 'Veritabanı Kullanıcı Adı',
                 'default-currency' => 'Varsayılan Para Birimi',
                 'default-locale' => 'Varsayılan Lokal',

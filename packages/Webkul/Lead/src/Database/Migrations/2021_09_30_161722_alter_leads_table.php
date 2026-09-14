@@ -23,7 +23,7 @@ return new class extends Migration
 
         DB::table('leads')
             ->update([
-                'leads.lead_pipeline_stage_id' => DB::raw($tablePrefix.'leads.lead_stage_id'),
+                'lead_pipeline_stage_id' => DB::raw($tablePrefix.'leads.lead_stage_id'),
             ]);
 
         Schema::table('leads', function (Blueprint $table) use ($tablePrefix) {

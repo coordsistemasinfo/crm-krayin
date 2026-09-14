@@ -9,6 +9,7 @@ use Webkul\Attribute\Models\Attribute;
 use Webkul\Attribute\Models\AttributeValue;
 use Webkul\Contact\Repositories\PersonRepository;
 use Webkul\Contract\Repositories\Pipeline;
+use Webkul\Core\Database\SqlCompat;
 use Webkul\DataGrid\DataGrid;
 use Webkul\Lead\Repositories\PipelineRepository;
 use Webkul\Lead\Repositories\SourceRepository;
@@ -72,7 +73,7 @@ class LeadDataGrid extends DataGrid
                 'tags.name as tag_name',
                 'lead_pipelines.rotten_days as pipeline_rotten_days',
                 'lead_pipeline_stages.code as stage_code',
-                DB::raw('CASE WHEN DATEDIFF(NOW(),'.$tablePrefix.'leads.created_at) >='.$tablePrefix.'lead_pipelines.rotten_days THEN 1 ELSE 0 END as rotten_lead'),
+                DB::raw('CASE WHEN '.SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >='.$tablePrefix.'lead_pipelines.rotten_days THEN 1 ELSE 0 END as rotten_lead'),
             )
             ->leftJoin('users', 'leads.user_id', '=', 'users.id')
             ->leftJoin('persons', 'leads.person_id', '=', 'persons.id')
@@ -110,7 +111,7 @@ class LeadDataGrid extends DataGrid
         }
 
         if (! is_null(request()->input('rotten_lead.in'))) {
-            $queryBuilder->havingRaw($tablePrefix.'rotten_lead = ?', [
+            $queryBuilder->havingRaw('CASE WHEN '.SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >='.$tablePrefix.'lead_pipelines.rotten_days THEN 1 ELSE 0 END = ?', [
                 (int) request()->input('rotten_lead.in'),
             ]);
         }
@@ -126,7 +127,7 @@ class LeadDataGrid extends DataGrid
         $this->addFilter('tag_name', 'tags.name');
         $this->addFilter('expected_close_date', 'leads.expected_close_date');
         $this->addFilter('created_at', 'leads.created_at');
-        $this->addFilter('rotten_lead', DB::raw('DATEDIFF(NOW(), '.$tablePrefix.'leads.created_at) >= '.$tablePrefix.'lead_pipelines.rotten_days'));
+        $this->addFilter('rotten_lead', DB::raw(SqlCompat::daysFromNow($tablePrefix.'leads.created_at').' >= '.$tablePrefix.'lead_pipelines.rotten_days'));
 
         return $queryBuilder;
     }

@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Webkul\Core\Database\SqlCompat;
 use Webkul\DataTransfer\Contracts\Import as ImportContract;
 use Webkul\DataTransfer\Contracts\ImportBatch as ImportBatchContract;
 use Webkul\DataTransfer\Helpers\Importers\AbstractImporter;
@@ -364,9 +365,9 @@ class Import
     {
         $summary = $this->importBatchRepository
             ->select(
-                DB::raw('SUM(json_unquote(json_extract(summary, \'$."created"\'))) AS created'),
-                DB::raw('SUM(json_unquote(json_extract(summary, \'$."updated"\'))) AS updated'),
-                DB::raw('SUM(json_unquote(json_extract(summary, \'$."deleted"\'))) AS deleted'),
+                DB::raw('SUM('.SqlCompat::jsonGetText('summary', 'created').') AS created'),
+                DB::raw('SUM('.SqlCompat::jsonGetText('summary', 'updated').') AS updated'),
+                DB::raw('SUM('.SqlCompat::jsonGetText('summary', 'deleted').') AS deleted'),
             )
             ->where('import_id', $this->import->id)
             ->groupBy('import_id')
@@ -399,9 +400,9 @@ class Import
 
         $summary = $this->importBatchRepository
             ->select(
-                DB::raw('SUM(json_unquote(json_extract(summary, \'$."created"\'))) AS created'),
-                DB::raw('SUM(json_unquote(json_extract(summary, \'$."updated"\'))) AS updated'),
-                DB::raw('SUM(json_unquote(json_extract(summary, \'$."deleted"\'))) AS deleted'),
+                DB::raw('SUM('.SqlCompat::jsonGetText('summary', 'created').') AS created'),
+                DB::raw('SUM('.SqlCompat::jsonGetText('summary', 'updated').') AS updated'),
+                DB::raw('SUM('.SqlCompat::jsonGetText('summary', 'deleted').') AS deleted'),
             )
             ->where('import_id', $this->import->id)
             ->where('state', $state)

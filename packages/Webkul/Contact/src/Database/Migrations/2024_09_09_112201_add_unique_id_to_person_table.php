@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Webkul\Core\Database\SqlCompat;
 
 return new class extends Migration
 {
@@ -21,10 +22,10 @@ return new class extends Migration
         DB::statement("
             UPDATE {$tableName}
             SET unique_id = CONCAT(
-                user_id, '|', 
-                organization_id, '|', 
-                JSON_UNQUOTE(JSON_EXTRACT(emails, '$[0].value')), '|',
-                JSON_UNQUOTE(JSON_EXTRACT(contact_numbers, '$[0].value'))
+                user_id, '|',
+                organization_id, '|',
+                COALESCE(".SqlCompat::jsonArrayFirstText($tableName.'.emails', 'value').", ''), '|',
+                COALESCE(".SqlCompat::jsonArrayFirstText($tableName.'.contact_numbers', 'value').", '')
             )
         ");
     }

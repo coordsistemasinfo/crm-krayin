@@ -163,6 +163,7 @@ return [
                 'database-password' => 'Database Password',
                 'database-port' => 'Database Port',
                 'database-prefix' => 'Database Prefix',
+                'database-schema' => 'Database Schema',
                 'database-username' => 'Database Username',
                 'default-currency' => 'Default Currency',
                 'default-locale' => 'Default Locale',

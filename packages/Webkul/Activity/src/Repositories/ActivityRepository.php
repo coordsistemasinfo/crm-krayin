@@ -3,6 +3,7 @@
 namespace Webkul\Activity\Repositories;
 
 use Webkul\Activity\Contracts\Activity;
+use Webkul\Core\Database\SqlCompat;
 use Webkul\Core\Eloquent\Repository;
 
 class ActivityRepository extends Repository
@@ -117,7 +118,7 @@ class ActivityRepository extends Repository
             'activities.schedule_to as end',
             'users.name as user_name',
         )
-            ->addSelect(\DB::raw('IF('.$tablePrefix.'activities.is_done, "done", "") as class'))
+            ->addSelect(\DB::raw(SqlCompat::ifExpr($tablePrefix.'activities.is_done', "'done'", "''").' as class'))
             ->leftJoin('activity_participants', 'activities.id', '=', 'activity_participants.activity_id')
             ->leftJoin('users', 'activities.user_id', '=', 'users.id')
             ->whereIn('type', ['call', 'meeting', 'lunch'])

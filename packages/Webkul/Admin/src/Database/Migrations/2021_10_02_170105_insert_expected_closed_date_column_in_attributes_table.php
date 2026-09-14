@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Webkul\Core\Database\SqlCompat;
 
 return new class extends Migration
 {
@@ -31,6 +32,10 @@ return new class extends Migration
                 'updated_at' => Carbon::now(),
             ],
         ]);
+
+        if (SqlCompat::isPostgres()) {
+            DB::statement("SELECT setval(pg_get_serial_sequence('attributes', 'id'), COALESCE((SELECT MAX(id) FROM attributes), 0) + 1, false)");
+        }
     }
 
     /**

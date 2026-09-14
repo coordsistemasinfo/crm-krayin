@@ -101,6 +101,10 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan serve --port=8100"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

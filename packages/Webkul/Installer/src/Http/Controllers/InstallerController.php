@@ -92,7 +92,7 @@ class InstallerController extends Controller
     {
         $this->abortIfInstalled();
 
-        $allParameters = request()->allParameters;
+        $allParameters = request()->all()['allParameters'] ?? [];
 
         $parameter = [
             'parameter' => [
