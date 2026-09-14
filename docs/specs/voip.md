@@ -1,6 +1,7 @@
 # Plugin VoIP — análisis (borrador)
 
-> Estado: borrador. Pendiente definir proveedor y alcance antes del spec.
+> Versión: 0.1 — Estado: borrador. Pendiente definir proveedor y alcance antes
+> del spec (v1.0).
 
 - Integraciones candidatas: **Asterisk local** (AMI/ARI), **Twilio Voice**,
   Zadarma u otra PBX con API. Sin definir.
@@ -44,3 +45,9 @@
 - Proveedor VoIP (¿Asterisk?, ¿Twilio?, ¿Zadarma?).
 - ¿Click-to-call desde navegador, solo logging, o ambos?
 - ¿Graba llamadas el proveedor? ¿dónde se guardan las grabaciones?
+
+## Historial
+
+| Versión | Fecha | Cambio |
+|---|---|---|
+| 0.1 | 2026-09-14 | Borrador inicial del análisis |

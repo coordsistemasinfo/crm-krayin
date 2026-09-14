@@ -1,7 +1,8 @@
 # Live Helper Chat — análisis de integración
 
-> Estado: análisis listo. El paso siguiente es el spec detallado de la Opción B
-> y luego el paquete `packages/Webkul/HelperChat` (nombre por decidir).
+> Versión: 0.2 — Estado: análisis listo. El paso siguiente es el spec detallado
+> de la Opción B (v1.0) y luego el paquete `packages/Webkul/HelperChat`
+> (nombre por decidir).
 
 - Fuente: https://livehelperchat.com/ — chat de soporte open source autoalojado.
 - Documentación API: https://doc.livehelperchat.com (REST API con Swagger en
@@ -52,3 +53,10 @@
 - Alcance exacto de la Opción B (¿qué pasa si un chat no matchea a ninguna
   persona? ¿se crea la persona automáticamente?).
 - Permisos/ACL del panel de chats en el admin.
+
+## Historial
+
+| Versión | Fecha | Cambio |
+|---|---|---|
+| 0.1 | 2026-09-14 | Borrador inicial del análisis |
+| 0.2 | 2026-09-14 | Análisis cerrado: evaluación de las 3 opciones, decisión de continuar con la Opción B |

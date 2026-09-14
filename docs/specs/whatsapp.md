@@ -1,8 +1,8 @@
 # Plugin WhatsApp — análisis (borrador)
 
-> Estado: borrador. Pendiente definir proveedor y alcance antes del spec.
-> **Importante**: evaluar si se consolida a través de Live Helper Chat
-> (ver [livehelperchat.md](livehelperchat.md)).
+> Versión: 0.1 — Estado: borrador. Pendiente definir proveedor y alcance antes
+> del spec (v1.0). **Importante**: evaluar si se consolida a través de Live
+> Helper Chat (ver [livehelperchat.md](livehelperchat.md)).
 
 ## Opciones de proveedor (sin decidir)
 
@@ -45,3 +45,9 @@ con negocio antes de invertir en este spec.
 - Proveedor/eje de operación (Cloud API vs BSP vs vía LHC).
 - ¿Mensajería 1:1 desde el CRM o también campañas con plantillas?
 - ¿Número compartido o dedicado?
+
+## Historial
+
+| Versión | Fecha | Cambio |
+|---|---|---|
+| 0.1 | 2026-09-14 | Borrador inicial del análisis |
