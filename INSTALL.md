@@ -49,8 +49,15 @@ GRANT ALL ON SCHEMA crmkrayin TO siu_devel;
 git clone -b unicomfa <URL-DE-ESTE-REPO> crm-krayin
 cd crm-krayin
 composer install --no-interaction
-npm install        # opcional, solo si se van a compilar assets
 ```
+
+`composer install` es **obligatorio** (instala Laravel y todos los paquetes
+Webkul). Los paquetes `Webkul/*` no vienen por composer externo — viven en
+`packages/` y se cargan vía autoloader del repo.
+
+`npm install` **no es necesario** para instalar ni para producción: solo si
+planeas modificar CSS/JS del admin, en cuyo caso además compilarías con
+`npm run build`. El instalador publica los assets base con `vendor:publish`.
 
 ---
 
