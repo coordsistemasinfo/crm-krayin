@@ -45,9 +45,17 @@ GRANT ALL ON SCHEMA crmkrayin TO siu_devel;
 
 ## 3. Obtener el código
 
+> **Importante**: toda esta adaptación vive en la rama **`unicomfa`**. Asegúrate
+> de estar en ella antes de instalar o actualizar (`git branch --show-current`
+> debe mostrar `unicomfa`).
+
 ```bash
 git clone -b unicomfa <URL-DE-ESTE-REPO> crm-krayin
 cd crm-krayin
+
+# Si el repositorio ya estaba clonado en otra rama:
+git checkout unicomfa
+git pull origin unicomfa
 
 # 1) Primero el .env (los hooks post-autoload de composer arrancan la app
 #    con `artisan package:discover`; con el .env presente el orden nunca falla)
